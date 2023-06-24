@@ -5,9 +5,9 @@ OUTPUT_FILE = 'output.txt'
 
 def divide_line(line, width):
     '''
-    divide the line into quotient and remainder
+    divide long line into multiple lines within specified width
     '''
-    quotients = []
+    wrap_lines = []
 
     while (len(line) > width):
         # find a space from (width - 1) leftwards
@@ -22,23 +22,21 @@ def divide_line(line, width):
                 pos += 1
 
 
-        chopped_line = line[0:pos].rstrip()
-        quotients.append(chopped_line)
+        chopped_line = line[0:pos].rstrip() + '\n'
+        wrap_lines.append(chopped_line)
         line = line[pos+1:].lstrip()
 
-    return (quotients, line)
+    wrap_lines.append(line)
+
+    return wrap_lines
 
 def wrap_file(file, width):
 
     wrapped_lines = []
 
     with open(file) as f_in:
-        remain = ''
         for line in f_in:
-            line = remain + line.rstrip()
-            (quotient, remain) = divide_line(line, width)
-            wrapped_lines += quotient
-        wrapped_lines += [remain]
+            wrapped_lines += divide_line(line, width)
 
     return wrapped_lines
 
@@ -52,7 +50,9 @@ if __name__ == '__main__':
 
     with open(OUTPUT_FILE, 'w') as f_out:
         for line in lines:
-            print(line, file=f_out)
+            f_out.write(line)
+
+    print(f'output is written to \"{OUTPUT_FILE}\"')
     
             
 
